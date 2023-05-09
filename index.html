@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> </title>
+  </head>
+  <body>
+    <h1>TIMER</h1>
+    <div>
+      <label for="hours">HRS</label>
+      <input type="number" id="hours" name="hours" value="0" min="0" />
+      <label for="minutes">MIN</label>
+      <input
+        type="number"
+        id="minutes"
+        name="minutes"
+        value="0"
+        min="0"
+        max="59"
+      />
+      <label for="seconds">SEC</label>
+      <input
+        type="number"
+        id="seconds"
+        name="seconds"
+        value="0"
+        min="0"
+        max="59"
+      />
+      <button id="start-pause-btn">Start</button>
+      <button id="reset-btn">Reset</button>
+    </div>
+    <div id="timer"></div>
+
+    <script>
+      function countdown(totalSeconds) {
+        let timeLeft = totalSeconds;
+        const timerId = setInterval(() => {
+          const hours = Math.floor(timeLeft / 3600);
+          const minutes = Math.floor((timeLeft % 3600) / 60);
+          let seconds = timeLeft % 60;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+          const timerDisplay = document.getElementById("timer");
+          timerDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+          timeLeft--;
+          if (timeLeft < 0) {
+            clearInterval(timerId);
+            alert("Finish");
+          }
+        }, 1000);
+        return timerId;
+      }
+
+      const startPauseBtn = document.getElementById("start-pause-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      let timerId;
+      let isTimerRunning = false;
+
+      startPauseBtn.addEventListener("click", () => {
+        if (!isTimerRunning) {
+          const hours = parseInt(document.getElementById("hours").value);
+          const minutes = parseInt(document.getElementById("minutes").value);
+          const seconds = parseInt(document.getElementById("seconds").value);
+          const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+          timerId = countdown(totalSeconds);
+          startPauseBtn.textContent = "Pause";
+          isTimerRunning = true;
+        } else {
+          clearInterval(timerId);
+          startPauseBtn.textContent = "Start";
+          isTimerRunning = false;
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        clearInterval(timerId);
+        const timerDisplay = document.getElementById("timer");
+        timerDisplay.textContent = "00:00:00";
+        document.getElementById("hours").value = 0;
+        document.getElementById("minutes").value = 0;
+        document.getElementById("seconds").value = 0;
+        startPauseBtn.textContent = "Start";
+        isTimerRunning = false;
+        timeLeft = 0;
+      });
+    </script>
+  </body>
+</html>
